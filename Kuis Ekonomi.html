@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kuis Teori Ekonomi Pra-Klasik</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        color: #333;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        text-align: center;
+      }
+      .quiz-container {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        max-width: 600px;
+        width: 90%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      h2 {
+        color: #4caf50;
+      }
+      .question {
+        font-size: 1.2em;
+        margin-bottom: 20px;
+      }
+      .options {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+      }
+      .option-button {
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+      .option-button:hover {
+        background-color: #e9e9e9;
+      }
+      .feedback {
+        margin-top: 20px;
+        font-weight: bold;
+      }
+      .correct {
+        color: green;
+      }
+      .incorrect {
+        color: red;
+      }
+      #result-container {
+        margin-top: 20px;
+        font-size: 1.5em;
+        display: none;
+      }
+      #form-container {
+        display: none;
+        margin-top: 20px;
+      }
+      #form-container input {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        width: 100%;
+        box-sizing: border-box;
+        margin-bottom: 10px;
+      }
+      .action-button {
+        padding: 10px 20px;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        background-color: #4caf50;
+        transition: background-color 0.3s ease;
+      }
+      .action-button:hover {
+        background-color: #45a049;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="quiz-container">
+      <div id="quiz-box">
+        <h2>Kuis Ekonomi Pra-Klasik</h2>
+        <div class="question" id="question-text"></div>
+        <div class="options" id="options-container"></div>
+        <div class="feedback" id="feedback-text"></div>
+      </div>
+
+      <div id="result-container">
+        <h3>Kuis Selesai!</h3>
+        <p>
+          Skor Anda: <span id="score-text">0</span> /
+          <span id="total-questions"></span>
+        </p>
+        <div id="form-container">
+          <input
+            type="text"
+            id="nama-input"
+            placeholder="Masukkan Nama Anda"
+            required
+          />
+          <button id="simpan-btn" class="action-button">Simpan Skor</button>
+        </div>
+        <button id="play-again-btn" class="action-button">Main Lagi</button>
+      </div>
+    </div>
+
+    <script>
+      const WEB_APP_URL =
+        "https://script.google.com/macros/s/AKfycby7pmdjMZ3-kXkz7XLbE0bt_MDJAPp_HXmphFP3U8ROsxxsw9anmFcvDiQgNhCL91tPIg/exec";
+      const questions = [
+        {
+          question:
+            "Siapakah tokoh yang dikenal sebagai pelopor pemikiran ekonomi merkantilisme?",
+          options: ["Adam Smith", "Thomas Mun", "Karl Marx", "David Ricardo"],
+          answer: "Thomas Mun",
+        },
+        {
+          question:
+            "Konsep utama yang menjadi fokus utama dalam teori ekonomi kaum Fisiokrat adalah...",
+          options: [
+            "Perdagangan internasional",
+            "Akumulasi emas",
+            "Produksi pertanian",
+            "Industri manufaktur",
+          ],
+          answer: "Produksi pertanian",
+        },
+        {
+          question:
+            "Istilah 'Laissez-faire, laissez-passer' yang berarti 'biarkan saja, biarkan berjalan' adalah slogan dari aliran...",
+          options: ["Skolastik", "Fisiokrat", "Merkantilisme", "Klasik"],
+          answer: "Fisiokrat",
+        },
+        {
+          question:
+            "Menurut kaum Merkantilisme, kekayaan suatu negara diukur berdasarkan...",
+          options: [
+            "Jumlah penduduk",
+            "Cadangan emas dan perak",
+            "Kekuatan militer",
+            "Tingkat pendidikan",
+          ],
+          answer: "Cadangan emas dan perak",
+        },
+        {
+          question:
+            "Konsep 'just price' (harga adil) merupakan pemikiran yang muncul pada masa...",
+          options: ["Merkantilisme", "Fisiokrat", "Skolastik", "Klasik"],
+          answer: "Skolastik",
+        },
+      ];
+
+      let currentQuestionIndex = 0;
+      let score = 0;
+
+      const quizBox = document.getElementById("quiz-box");
+      const resultContainer = document.getElementById("result-container");
+      const questionText = document.getElementById("question-text");
+      const optionsContainer = document.getElementById("options-container");
+      const feedbackText = document.getElementById("feedback-text");
+      const scoreText = document.getElementById("score-text");
+      const totalQuestionsText = document.getElementById("total-questions");
+      const playAgainBtn = document.getElementById("play-again-btn");
+      const simpanBtn = document.getElementById("simpan-btn");
+      const namaInput = document.getElementById("nama-input");
+      const formContainer = document.getElementById("form-container");
+
+      function showQuestion() {
+        if (currentQuestionIndex < questions.length) {
+          const currentQuestion = questions[currentQuestionIndex];
+          questionText.textContent = currentQuestion.question;
+          optionsContainer.innerHTML = "";
+          feedbackText.textContent = "";
+          currentQuestion.options.forEach((option) => {
+            const button = document.createElement("button");
+            button.textContent = option;
+            button.classList.add("option-button");
+            button.addEventListener("click", () =>
+              checkAnswer(option, currentQuestion.answer)
+            );
+            optionsContainer.appendChild(button);
+          });
+        } else {
+          showResult();
+        }
+      }
+
+      function checkAnswer(selectedOption, correctAnswer) {
+        if (selectedOption === correctAnswer) {
+          feedbackText.textContent = "Jawaban Benar!";
+          feedbackText.classList.remove("incorrect");
+          feedbackText.classList.add("correct");
+          score++;
+        } else {
+          feedbackText.textContent = `Jawaban Salah. Yang benar adalah "${correctAnswer}".`;
+          feedbackText.classList.remove("correct");
+          feedbackText.classList.add("incorrect");
+        }
+        disableButtons();
+        setTimeout(() => {
+          currentQuestionIndex++;
+          showQuestion();
+        }, 1500);
+      }
+
+      function disableButtons() {
+        Array.from(optionsContainer.children).forEach((button) => {
+          button.disabled = true;
+        });
+      }
+
+      function showResult() {
+        quizBox.style.display = "none";
+        resultContainer.style.display = "flex";
+        scoreText.textContent = score;
+        totalQuestionsText.textContent = questions.length;
+        formContainer.style.display = "block";
+      }
+
+      function resetQuiz() {
+        currentQuestionIndex = 0;
+        score = 0;
+        quizBox.style.display = "flex";
+        resultContainer.style.display = "none";
+        formContainer.style.display = "none";
+        namaInput.value = "";
+        showQuestion();
+      }
+
+      simpanBtn.addEventListener("click", function () {
+        const nama = namaInput.value.trim();
+        if (nama === "") {
+          alert("Mohon masukkan nama Anda.");
+          return;
+        }
+
+        simpanBtn.textContent = "Menyimpan...";
+        simpanBtn.disabled = true;
+
+        fetch(WEB_APP_URL, {
+          method: "POST",
+          body: new URLSearchParams({
+            nama: nama,
+            skor: score,
+          }),
+        })
+          .then((response) => response.text())
+          .then((data) => {
+            alert("Skor berhasil disimpan!");
+            formContainer.style.display = "none";
+          })
+          .catch((error) => {
+            alert("Gagal menyimpan skor. Coba lagi.");
+            console.error("Error:", error);
+          })
+          .finally(() => {
+            simpanBtn.textContent = "Simpan Skor";
+            simpanBtn.disabled = false;
+          });
+      });
+
+      playAgainBtn.addEventListener("click", resetQuiz);
+      showQuestion();
+    </script>
+  </body>
+</html>
