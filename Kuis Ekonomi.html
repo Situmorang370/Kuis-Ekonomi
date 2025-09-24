@@ -134,6 +134,24 @@
         #start-page, #quiz-box, #result-container {
             display: none;
         }
+        @media screen and (max-width: 600px) {
+            .quiz-container {
+                padding: 25px;
+                width: 95%;
+            }
+            .info-form input, .action-button, .option-button {
+                font-size: 0.9em;
+            }
+            .action-button {
+                padding: 12px 20px;
+            }
+            h2 {
+                font-size: 1.5em;
+            }
+            .question {
+                font-size: 1em;
+            }
+        }
     </style>
 </head>
 <body>
@@ -169,7 +187,7 @@
 </div>
 
 <script>
-    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbykczrgIvcZas5_1D3C4gXcUjSzkwW3aTf-XatoiHg5BKl7gOmpIxNY94tFXeRAwgxE2w/exec'; 
+    const WEB_APP_URL = 'PASTE_URL_WEB_APP_ANDA_DI_SINI'; 
     
     let studentData = {};
     let currentQuestionIndex = 0;
