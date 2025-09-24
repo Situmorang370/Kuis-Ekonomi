@@ -178,4 +178,99 @@
     const questions = [
         // 5 Pertanyaan Awal
         {
-            question: "Siapakah tokoh yang dikenal sebagai
+            question: "Siapakah tokoh yang dikenal sebagai pelopor pemikiran ekonomi merkantilisme?",
+            options: ["Adam Smith", "Thomas Mun", "Karl Marx", "David Ricardo"],
+            answer: "Thomas Mun"
+        },
+        {
+            question: "Konsep utama yang menjadi fokus utama dalam teori ekonomi kaum Fisiokrat adalah...",
+            options: ["Perdagangan internasional", "Akumulasi emas", "Produksi pertanian", "Industri manufaktur"],
+            answer: "Produksi pertanian"
+        },
+        {
+            question: "Istilah 'Laissez-faire, laissez-passer' yang berarti 'biarkan saja, biarkan berjalan' adalah slogan dari aliran...",
+            options: ["Skolastik", "Fisiokrat", "Merkantilisme", "Klasik"],
+            answer: "Fisiokrat"
+        },
+        {
+            question: "Menurut kaum Merkantilisme, kekayaan suatu negara diukur berdasarkan...",
+            options: ["Jumlah penduduk", "Cadangan emas dan perak", "Kekuatan militer", "Tingkat pendidikan"],
+            answer: "Cadangan emas dan perak"
+        },
+        {
+            question: "Konsep 'just price' (harga adil) merupakan pemikiran yang muncul pada masa...",
+            options: ["Merkantilisme", "Fisiokrat", "Skolastik", "Klasik"],
+            answer: "Skolastik"
+        },
+        // 5 Pertanyaan Tambahan
+        {
+            question: "Pada masa Merkantilisme, kebijakan yang bertujuan untuk menekan impor dan mendorong ekspor disebut...",
+            options: ["Proteksionisme", "Liberalisme", "Laissez-faire", "Fisiokrasi"],
+            answer: "Proteksionisme"
+        },
+        {
+            question: "Tokoh Fisiokrat yang dikenal dengan karyanya 'Tableau Économique' adalah...",
+            options: ["Adam Smith", "François Quesnay", "Jacques Turgot", "David Hume"],
+            answer: "François Quesnay"
+        },
+        {
+            question: "Kaum Fisiokrat membagi masyarakat menjadi tiga kelas, yaitu kelas produktif, kelas pemilik tanah, dan...",
+            options: ["Kelas pedagang", "Kelas buruh", "Kelas militer", "Kelas steril (tidak produktif)"],
+            answer: "Kelas steril (tidak produktif)"
+        },
+        {
+            question: "Pernyataan 'kekayaan suatu bangsa adalah totalitas hasil pertaniannya' merupakan inti dari pemikiran ekonomi aliran...",
+            options: ["Merkantilisme", "Fisiokrat", "Skolastik", "Klasik"],
+            answer: "Fisiokrat"
+        },
+        {
+            question: "Pemikiran ekonomi pada masa Skolastik sangat dipengaruhi oleh ajaran...",
+            options: ["Filsafat Yunani kuno", "Agama Kristen", "Filsafat Islam", "Sains modern"],
+            answer: "Agama Kristen"
+        }
+    ];
+
+    const startPage = document.getElementById('start-page');
+    const quizBox = document.getElementById('quiz-box');
+    const resultContainer = document.getElementById('result-container');
+    const questionText = document.getElementById('question-text');
+    const optionsContainer = document.getElementById('options-container');
+    const feedbackText = document.getElementById('feedback-text');
+    const scoreText = document.getElementById('score-text');
+    const totalQuestionsText = document.getElementById('total-questions');
+    const playAgainBtn = document.getElementById('play-again-btn');
+    const startQuizBtn = document.getElementById('start-quiz-btn');
+    const namaInputForm = document.getElementById('nama-input-form');
+    const emailInputForm = document.getElementById('email-input-form');
+    const nimInputForm = document = document.getElementById('nim-input-form');
+    const kelasInputForm = document.getElementById('kelas-input-form');
+    const submissionStatus = document.getElementById('submission-status');
+
+    startQuizBtn.addEventListener('click', () => {
+        const nama = namaInputForm.value.trim();
+        const email = emailInputForm.value.trim();
+        const nim = nimInputForm.value.trim();
+        const kelas = kelasInputForm.value.trim();
+
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (nama === '' || email === '' || nim === '' || kelas === '') {
+            alert('Semua kolom harus diisi.');
+            return;
+        }
+
+        if (!emailPattern.test(email)) {
+            alert('Masukkan alamat email yang valid.');
+            return;
+        }
+
+        studentData = { nama, email, nim, kelas };
+        startPage.style.display = 'none';
+        quizBox.style.display = 'flex';
+        showQuestion();
+    });
+
+    function showQuestion() {
+        if (currentQuestionIndex < questions.length) {
+            const currentQuestion = questions[currentQuestionIndex];
+            questionText.textContent
