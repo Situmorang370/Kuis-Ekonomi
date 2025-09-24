@@ -65,10 +65,6 @@
         font-size: 1.5em;
         display: none;
       }
-      #form-container {
-        display: none;
-        margin-top: 20px;
-      }
       #form-container input {
         padding: 10px;
         border: 1px solid #ccc;
@@ -89,10 +85,31 @@
       .action-button:hover {
         background-color: #45a049;
       }
+      #pre-quiz-form {
+        display: block;
+      }
+      #quiz-box,
+      #result-container {
+        display: none;
+      }
     </style>
   </head>
   <body>
     <div class="quiz-container">
+      <div id="pre-quiz-form">
+        <h2>Data Mahasiswa</h2>
+        <input type="text" id="nama-input-form" placeholder="Nama" required />
+        <input
+          type="email"
+          id="email-input-form"
+          placeholder="Email"
+          required
+        />
+        <input type="text" id="nim-input-form" placeholder="NIM" required />
+        <input type="text" id="kelas-input-form" placeholder="Kelas" required />
+        <button id="start-quiz-btn" class="action-button">Mulai Kuis</button>
+      </div>
+
       <div id="quiz-box">
         <h2>Kuis Ekonomi Pra-Klasik</h2>
         <div class="question" id="question-text"></div>
@@ -106,22 +123,19 @@
           Skor Anda: <span id="score-text">0</span> /
           <span id="total-questions"></span>
         </p>
-        <div id="form-container">
-          <input
-            type="text"
-            id="nama-input"
-            placeholder="Masukkan Nama Anda"
-            required
-          />
-          <button id="simpan-btn" class="action-button">Simpan Skor</button>
-        </div>
+        <p id="submission-status"></p>
         <button id="play-again-btn" class="action-button">Main Lagi</button>
       </div>
     </div>
 
     <script>
       const WEB_APP_URL =
-        "https://script.google.com/macros/s/AKfycby7pmdjMZ3-kXkz7XLbE0bt_MDJAPp_HXmphFP3U8ROsxxsw9anmFcvDiQgNhCL91tPIg/exec";
+        "https://script.google.com/macros/s/AKfycbykczrgIvcZas5_1D3C4gXcUjSzkwW3aTf-XatoiHg5BKl7gOmpIxNY94tFXeRAwgxE2w/exec";
+
+      let studentData = {};
+      let currentQuestionIndex = 0;
+      let score = 0;
+
       const questions = [
         {
           question:
@@ -165,9 +179,7 @@
         },
       ];
 
-      let currentQuestionIndex = 0;
-      let score = 0;
-
+      const preQuizForm = document.getElementById("pre-quiz-form");
       const quizBox = document.getElementById("quiz-box");
       const resultContainer = document.getElementById("result-container");
       const questionText = document.getElementById("question-text");
@@ -176,9 +188,29 @@
       const scoreText = document.getElementById("score-text");
       const totalQuestionsText = document.getElementById("total-questions");
       const playAgainBtn = document.getElementById("play-again-btn");
-      const simpanBtn = document.getElementById("simpan-btn");
-      const namaInput = document.getElementById("nama-input");
-      const formContainer = document.getElementById("form-container");
+      const startQuizBtn = document.getElementById("start-quiz-btn");
+      const namaInputForm = document.getElementById("nama-input-form");
+      const emailInputForm = document.getElementById("email-input-form");
+      const nimInputForm = document.getElementById("nim-input-form");
+      const kelasInputForm = document.getElementById("kelas-input-form");
+      const submissionStatus = document.getElementById("submission-status");
+
+      startQuizBtn.addEventListener("click", () => {
+        const nama = namaInputForm.value.trim();
+        const email = emailInputForm.value.trim();
+        const nim = nimInputForm.value.trim();
+        const kelas = kelasInputForm.value.trim();
+
+        if (nama === "" || email === "" || nim === "" || kelas === "") {
+          alert("Mohon lengkapi semua data sebelum memulai kuis.");
+          return;
+        }
+
+        studentData = { nama, email, nim, kelas };
+        preQuizForm.style.display = "none";
+        quizBox.style.display = "flex";
+        showQuestion();
+      });
 
       function showQuestion() {
         if (currentQuestionIndex < questions.length) {
@@ -229,53 +261,51 @@
         resultContainer.style.display = "flex";
         scoreText.textContent = score;
         totalQuestionsText.textContent = questions.length;
-        formContainer.style.display = "block";
+        submissionStatus.textContent = "Menyimpan data...";
+        submitScore();
       }
+
+      function submitScore() {
+        fetch(WEB_APP_URL, {
+          method: "POST",
+          body: new URLSearchParams({
+            nama: studentData.nama,
+            email: studentData.email,
+            nim: studentData.nim,
+            kelas: studentData.kelas,
+            skor: score,
+          }),
+        })
+          .then((response) => {
+            if (response.ok) {
+              return response.text();
+            } else {
+              throw new Error("Gagal mengirim data");
+            }
+          })
+          .then((data) => {
+            submissionStatus.textContent = "Data berhasil disimpan!";
+          })
+          .catch((error) => {
+            submissionStatus.textContent = "Gagal menyimpan data. Coba lagi.";
+            console.error("Error:", error);
+          });
+      }
+
+      playAgainBtn.addEventListener("click", resetQuiz);
 
       function resetQuiz() {
         currentQuestionIndex = 0;
         score = 0;
-        quizBox.style.display = "flex";
+        quizBox.style.display = "none";
         resultContainer.style.display = "none";
-        formContainer.style.display = "none";
-        namaInput.value = "";
-        showQuestion();
+        preQuizForm.style.display = "block";
+        namaInputForm.value = "";
+        emailInputForm.value = "";
+        nimInputForm.value = "";
+        kelasInputForm.value = "";
+        submissionStatus.textContent = "";
       }
-
-      simpanBtn.addEventListener("click", function () {
-        const nama = namaInput.value.trim();
-        if (nama === "") {
-          alert("Mohon masukkan nama Anda.");
-          return;
-        }
-
-        simpanBtn.textContent = "Menyimpan...";
-        simpanBtn.disabled = true;
-
-        fetch(WEB_APP_URL, {
-          method: "POST",
-          body: new URLSearchParams({
-            nama: nama,
-            skor: score,
-          }),
-        })
-          .then((response) => response.text())
-          .then((data) => {
-            alert("Skor berhasil disimpan!");
-            formContainer.style.display = "none";
-          })
-          .catch((error) => {
-            alert("Gagal menyimpan skor. Coba lagi.");
-            console.error("Error:", error);
-          })
-          .finally(() => {
-            simpanBtn.textContent = "Simpan Skor";
-            simpanBtn.disabled = false;
-          });
-      });
-
-      playAgainBtn.addEventListener("click", resetQuiz);
-      showQuestion();
     </script>
   </body>
 </html>
