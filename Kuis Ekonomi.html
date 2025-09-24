@@ -176,57 +176,65 @@
     let score = 0;
 
     const questions = [
-        // 5 Pertanyaan Awal
+        // Soal 1
         {
-            question: "Siapakah tokoh yang dikenal sebagai pelopor pemikiran ekonomi merkantilisme?",
-            options: ["Adam Smith", "Thomas Mun", "Karl Marx", "David Ricardo"],
-            answer: "Thomas Mun"
+            question: "Tokoh merkantilisme menekankan surplus perdagangan sebagai sumber kekayaan negara, sedangkan fisiokrat menekankan sektor pertanian. Jika kedua aliran tersebut dihadapkan pada kondisi modern Indonesia yang kaya sumber daya alam namun impor pangan masih tinggi, maka perbedaan pandangan mereka akan terlihat pada…",
+            options: ["Merkantilis mendukung impor besar-besaran, fisiokrat menekankan ekspor hasil industri.", "Merkantilis menolak ekspor hasil pertanian, fisiokrat mendukung impor pangan murah.", "Merkantilis mendorong proteksi industri dan perdagangan, fisiokrat mendorong optimalisasi sektor pertanian.", "Keduanya sama-sama menekankan liberalisasi perdagangan internasional."],
+            answer: "Merkantilis mendorong proteksi industri dan perdagangan, fisiokrat mendorong optimalisasi sektor pertanian."
         },
+        // Soal 2
         {
-            question: "Konsep utama yang menjadi fokus utama dalam teori ekonomi kaum Fisiokrat adalah...",
-            options: ["Perdagangan internasional", "Akumulasi emas", "Produksi pertanian", "Industri manufaktur"],
-            answer: "Produksi pertanian"
+            question: "Jika pemerintah saat ini menaikkan tarif impor beras untuk melindungi petani lokal, maka berdasarkan teori pra-klasik, kebijakan tersebut lebih sesuai dengan pemikiran…",
+            options: ["Merkantilisme, karena mendukung surplus perdagangan lewat proteksi.", "Fisiokrat, karena mendorong pertanian menjadi sumber kekayaan sejati.", "Merkantilisme, karena fokus pada perdagangan logam mulia.", "Pemikir individual, karena menekankan rasionalitas konsumen."],
+            answer: "Merkantilisme, karena mendukung surplus perdagangan lewat proteksi."
         },
+        // Soal 3
         {
-            question: "Istilah 'Laissez-faire, laissez-passer' yang berarti 'biarkan saja, biarkan berjalan' adalah slogan dari aliran...",
-            options: ["Skolastik", "Fisiokrat", "Merkantilisme", "Klasik"],
-            answer: "Fisiokrat"
+            question: "Thomas Aquinas menekankan “harga yang adil” sebagai prinsip ekonomi. Dalam konteks ekonomi digital saat ini, prinsip ini paling relevan jika diterapkan pada…",
+            options: ["Penetapan harga saham di bursa efek.", "Pengawasan harga obat esensial oleh pemerintah.", "Persaingan harga tiket online oleh aplikasi travel.", "Mekanisme lelang barang antik."],
+            answer: "Pengawasan harga obat esensial oleh pemerintah."
         },
+        // Soal 4
         {
-            question: "Menurut kaum Merkantilisme, kekayaan suatu negara diukur berdasarkan...",
-            options: ["Jumlah penduduk", "Cadangan emas dan perak", "Kekuatan militer", "Tingkat pendidikan"],
-            answer: "Cadangan emas dan perak"
+            question: "David Hume mengkritik merkantilisme karena penumpukan logam mulia berlebih dapat menimbulkan inflasi. Jika fenomena serupa terjadi ketika cadangan devisa suatu negara meningkat drastis, maka kelemahan merkantilisme yang tampak adalah…",
+            options: ["Keseimbangan neraca pembayaran otomatis stabil.", "Logam mulia tidak selalu menjamin stabilitas harga.", "Inflasi dapat ditekan dengan memperbesar ekspor.", "Kekayaan negara hanya ditentukan oleh produktivitas pertanian."],
+            answer: "Logam mulia tidak selalu menjamin stabilitas harga."
         },
+        // Soal 5
         {
-            question: "Konsep 'just price' (harga adil) merupakan pemikiran yang muncul pada masa...",
-            options: ["Merkantilisme", "Fisiokrat", "Skolastik", "Klasik"],
-            answer: "Skolastik"
+            question: "Bayangkan kamu adalah penasihat ekonomi pada masa pra-klasik. Negara sedang menghadapi defisit perdagangan dan hasil pertanian rendah. Jika kamu harus menggabungkan prinsip merkantilisme dan fisiokrat, kebijakan yang paling logis adalah…",
+            options: ["Membatasi impor barang mewah, sekaligus memberikan insentif besar pada sektor pertanian.", "Meningkatkan ekspor pertanian dengan cara menurunkan tarif impor pangan.", "Mengutamakan perdagangan bebas sembari membatasi kepemilikan tanah.", "Fokus hanya pada pertanian sebagai satu-satunya sumber kekayaan negara."],
+            answer: "Membatasi impor barang mewah, sekaligus memberikan insentif besar pada sektor pertanian."
         },
-        // 5 Pertanyaan Tambahan
+        // Soal 6
         {
-            question: "Pada masa Merkantilisme, kebijakan yang bertujuan untuk menekan impor dan mendorong ekspor disebut...",
-            options: ["Proteksionisme", "Liberalisme", "Laissez-faire", "Fisiokrasi"],
-            answer: "Proteksionisme"
+            question: "Plato memandang pembagian kerja penting untuk mencapai keadilan sosial. Dalam konteks industri modern, gagasan ini sejalan dengan…",
+            options: ["Spesialisasi pekerjaan dalam lini produksi pabrik.", "Kebijakan proteksi perdagangan internasional.", "Praktik monopoli perusahaan besar.", "Kebijakan pajak tunggal pada pemilik tanah."],
+            answer: "Spesialisasi pekerjaan dalam lini produksi pabrik."
         },
+        // Soal 7
         {
-            question: "Tokoh Fisiokrat yang dikenal dengan karyanya 'Tableau Économique' adalah...",
-            options: ["Adam Smith", "François Quesnay", "Jacques Turgot", "David Hume"],
-            answer: "François Quesnay"
+            question: "Aristoteles menolak praktik riba karena dianggap tidak etis. Jika diterapkan sekarang, pandangannya paling dekat dengan…",
+            options: ["Kebijakan subsidi pupuk bagi petani.", "Larangan bunga berlebihan pada pinjaman online.", "Regulasi harga BBM bersubsidi.", "Pajak progresif bagi pemilik tanah luas."],
+            answer: "Larangan bunga berlebihan pada pinjaman online."
         },
+        // Soal 8
         {
-            question: "Kaum Fisiokrat membagi masyarakat menjadi tiga kelas, yaitu kelas produktif, kelas pemilik tanah, dan...",
-            options: ["Kelas pedagang", "Kelas buruh", "Kelas militer", "Kelas steril (tidak produktif)"],
-            answer: "Kelas steril (tidak produktif)"
+            question: "Quesnay menolak kebijakan proteksi Colbert karena membuat barang-barang lebih mahal. Pandangan ini menunjukkan bahwa fisiokrat…",
+            options: ["Mendukung monopoli dagang internasional.", "Menyukai pajak ganda bagi industri mewah.", "Lebih pro pada kebebasan pasar dibanding intervensi pemerintah.", "Menolak pertanian sebagai sumber kekayaan sejati."],
+            answer: "Lebih pro pada kebebasan pasar dibanding intervensi pemerintah."
         },
+        // Soal 9
         {
-            question: "Pernyataan 'kekayaan suatu bangsa adalah totalitas hasil pertaniannya' merupakan inti dari pemikiran ekonomi aliran...",
-            options: ["Merkantilisme", "Fisiokrat", "Skolastik", "Klasik"],
-            answer: "Fisiokrat"
+            question: "Pemikiran pra-klasik sering dianggap belum mandiri sebagai ilmu ekonomi. Kelemahan ini tampak ketika…",
+            options: ["Pemikirannya didominasi metode kuantitatif.", "Ekonomi masih bercampur dengan politik, hukum, dan etika.", "Mereka sudah memahami teori permintaan-penawaran.", "Mereka hanya fokus pada distribusi kekayaan individu."],
+            answer: "Ekonomi masih bercampur dengan politik, hukum, dan etika."
         },
+        // Soal 10
         {
-            question: "Pemikiran ekonomi pada masa Skolastik sangat dipengaruhi oleh ajaran...",
-            options: ["Filsafat Yunani kuno", "Agama Kristen", "Filsafat Islam", "Sains modern"],
-            answer: "Agama Kristen"
+            question: "Jika kamu diminta merancang sistem ekonomi hibrida berdasarkan pemikiran pra-klasik untuk negara berkembang saat ini, maka strategi yang paling tepat adalah…",
+            options: ["Meningkatkan akumulasi devisa dengan ekspor besar-besaran tanpa memperhatikan produksi pangan.", "Menghapus semua bentuk intervensi negara dalam perdagangan internasional.", "Mengombinasikan proteksi industri strategis (merkantilisme) dengan modernisasi pertanian (fisiokrat) serta etika harga adil (Aquinas).", "Menjadikan logam mulia sebagai satu-satunya ukuran keberhasilan ekonomi."],
+            answer: "Mengombinasikan proteksi industri strategis (merkantilisme) dengan modernisasi pertanian (fisiokrat) serta etika harga adil (Aquinas)."
         }
     ];
 
@@ -242,7 +250,7 @@
     const startQuizBtn = document.getElementById('start-quiz-btn');
     const namaInputForm = document.getElementById('nama-input-form');
     const emailInputForm = document.getElementById('email-input-form');
-    const nimInputForm = document = document.getElementById('nim-input-form');
+    const nimInputForm = document.getElementById('nim-input-form');
     const kelasInputForm = document.getElementById('kelas-input-form');
     const submissionStatus = document.getElementById('submission-status');
 
@@ -273,5 +281,96 @@
     function showQuestion() {
         if (currentQuestionIndex < questions.length) {
             const currentQuestion = questions[currentQuestionIndex];
-            questionText.textContent
+            questionText.textContent = `Soal ${currentQuestionIndex + 1} dari ${questions.length}: ${currentQuestion.question}`;
+            optionsContainer.innerHTML = '';
+            feedbackText.textContent = '';
+            currentQuestion.options.forEach(option => {
+                const button = document.createElement('button');
+                button.textContent = option;
+                button.classList.add('option-button');
+                button.addEventListener('click', () => checkAnswer(option, currentQuestion.answer));
+                optionsContainer.appendChild(button);
+            });
+        } else {
+            showResult();
+        }
+    }
 
+    function checkAnswer(selectedOption, correctAnswer) {
+        if (selectedOption === correctAnswer) {
+            feedbackText.textContent = "Jawaban Benar!";
+            feedbackText.classList.remove('incorrect');
+            feedbackText.classList.add('correct');
+            score++;
+        } else {
+            feedbackText.textContent = `Jawaban Salah. Yang benar adalah "${correctAnswer}".`;
+            feedbackText.classList.remove('correct');
+            feedbackText.classList.add('incorrect');
+        }
+        disableButtons();
+        setTimeout(() => {
+            currentQuestionIndex++;
+            showQuestion();
+        }, 1500);
+    }
+
+    function disableButtons() {
+        Array.from(optionsContainer.children).forEach(button => {
+            button.disabled = true;
+        });
+    }
+
+    function showResult() {
+        quizBox.style.display = 'none';
+        resultContainer.style.display = 'flex';
+        scoreText.textContent = score;
+        totalQuestionsText.textContent = questions.length;
+        submissionStatus.textContent = 'Menyimpan data...';
+        submitScore();
+    }
+
+    function submitScore() {
+        fetch(WEB_APP_URL, {
+            method: 'POST',
+            body: new URLSearchParams({
+                'nama': studentData.nama,
+                'email': studentData.email,
+                'nim': studentData.nim,
+                'kelas': studentData.kelas,
+                'skor': score
+            })
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.text();
+            } else {
+                throw new Error('Gagal mengirim data');
+            }
+        })
+        .then(data => {
+            submissionStatus.textContent = 'Data berhasil disimpan!';
+        })
+        .catch(error => {
+            submissionStatus.textContent = 'Gagal menyimpan data. Coba lagi.';
+            console.error('Error:', error);
+        });
+    }
+
+    playAgainBtn.addEventListener('click', resetQuiz);
+
+    function resetQuiz() {
+        currentQuestionIndex = 0;
+        score = 0;
+        quizBox.style.display = 'none';
+        resultContainer.style.display = 'none';
+        startPage.style.display = 'block';
+        namaInputForm.value = '';
+        emailInputForm.value = '';
+        nimInputForm.value = '';
+        kelasInputForm.value = '';
+        submissionStatus.textContent = '';
+    }
+</script>
+
+</body>
+</html>
