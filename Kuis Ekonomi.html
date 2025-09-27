@@ -91,7 +91,7 @@
             font-size: 1.2em;
             font-weight: 600;
             margin-bottom: 20px;
-            text-align: left; /* Perbaikan: Teks pertanyaan rata kiri */
+            text-align: left;
             width: 100%;
         }
         .options {
@@ -135,7 +135,7 @@
         }
         #start-page, #quiz-box, #result-container {
             display: none;
-            flex-direction: column; /* Perbaikan: Konten di dalam container tampil vertikal */
+            flex-direction: column;
             align-items: center;
         }
         @media screen and (max-width: 600px) {
@@ -193,7 +193,7 @@
 </div>
 
 <script>
-    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxHEvXiYlHms2SfUrkmBVkH9yEsY8C8oZC5ZiAoc5v4gZjdWmJUbYiXhWZJ_f4UFZ_UpQ/exec'; 
+    const WEB_APP_URL = 'PASTE_URL_WEB_APP_ANDA_DI_SINI'; 
     
     let studentData = {};
     let currentPartIndex = 0;
@@ -285,151 +285,4 @@
     const emailInputForm = document.getElementById('email-input-form');
     const nimInputForm = document.getElementById('nim-input-form');
     const kelasInputForm = document.getElementById('kelas-input-form');
-    const submissionStatus = document.getElementById('submission-status');
-    const quizPartTitle = document.getElementById('quiz-part-title');
-
-    startQuizBtn.addEventListener('click', () => {
-        const nama = namaInputForm.value.trim();
-        const email = emailInputForm.value.trim();
-        const nim = nimInputForm.value.trim();
-        const kelas = kelasInputForm.value.trim();
-
-        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-        if (nama === '' || email === '' || nim === '' || kelas === '') {
-            alert('Semua kolom harus diisi.');
-            return;
-        }
-
-        if (!emailPattern.test(email)) {
-            alert('Masukkan alamat email yang valid.');
-            return;
-        }
-
-        studentData = { nama, email, nim, kelas };
-        startPage.style.display = 'none';
-        quizBox.style.display = 'flex';
-        showQuestion();
-    });
-
-    nextPartBtn.addEventListener('click', () => {
-        currentPartIndex++;
-        currentQuestionIndexInPart = 0;
-        nextPartBtn.style.display = 'none';
-        quizBox.style.display = 'flex';
-        showQuestion();
-    });
-
-    function showQuestion() {
-        const currentPart = quizParts[currentPartIndex];
-        const currentQuestion = currentPart.questions[currentQuestionIndexInPart];
-
-        quizPartTitle.textContent = currentPart.title;
-        questionText.textContent = `Soal ${currentQuestionIndexInPart + 1} dari ${currentPart.questions.length}: ${currentQuestion.question}`;
-        optionsContainer.innerHTML = '';
-        feedbackText.textContent = '';
-
-        currentQuestion.options.forEach(option => {
-            const button = document.createElement('button');
-            button.textContent = option;
-            button.classList.add('option-button');
-            button.addEventListener('click', () => checkAnswer(option, currentQuestion.answer));
-            optionsContainer.appendChild(button);
-        });
-    }
-
-    function checkAnswer(selectedOption, correctAnswer) {
-        if (selectedOption === correctAnswer) {
-            feedbackText.textContent = "Jawaban Benar!";
-            feedbackText.classList.remove('incorrect');
-            feedbackText.classList.add('correct');
-            score++;
-        } else {
-            feedbackText.textContent = `Jawaban Salah. Yang benar adalah "${correctAnswer}".`;
-            feedbackText.classList.remove('correct');
-            feedbackText.classList.add('incorrect');
-            wrongAnswers++;
-        }
-        disableButtons();
-        
-        setTimeout(() => {
-            currentQuestionIndexInPart++;
-            const currentPart = quizParts[currentPartIndex];
-            
-            if (currentQuestionIndexInPart >= currentPart.questions.length) {
-                if (currentPartIndex < quizParts.length - 1) {
-                    quizBox.style.display = 'none';
-                    nextPartBtn.style.display = 'block';
-                } else {
-                    showResult();
-                }
-            } else {
-                showQuestion();
-            }
-        }, 1500);
-    }
-
-    function disableButtons() {
-        Array.from(optionsContainer.children).forEach(button => {
-            button.disabled = true;
-        });
-    }
-
-    function showResult() {
-        quizBox.style.display = 'none';
-        resultContainer.style.display = 'flex';
-        const totalQuestions = quizParts.reduce((sum, part) => sum + part.questions.length, 0);
-        scoreText.textContent = score;
-        totalQuestionsText.textContent = totalQuestions;
-        wrongAnswersText.textContent = wrongAnswers;
-        submissionStatus.textContent = 'Menyimpan data...';
-        submitScore();
-    }
-
-    function submitScore() {
-        fetch(WEB_APP_URL, {
-            method: 'POST',
-            body: new URLSearchParams({
-                'nama': studentData.nama,
-                'email': studentData.email,
-                'nim': studentData.nim,
-                'kelas': studentData.kelas,
-                'skor': score
-            })
-        })
-        .then(response => {
-            if (response.ok) {
-                return response.text();
-            } else {
-                throw new Error('Gagal mengirim data');
-            }
-        })
-        .then(data => {
-            submissionStatus.textContent = 'Data berhasil disimpan!';
-        })
-        .catch(error => {
-            submissionStatus.textContent = 'Gagal menyimpan data. Coba lagi.';
-            console.error('Error:', error);
-        });
-    }
-
-    playAgainBtn.addEventListener('click', resetQuiz);
-
-    function resetQuiz() {
-        currentPartIndex = 0;
-        currentQuestionIndexInPart = 0;
-        score = 0;
-        wrongAnswers = 0;
-        quizBox.style.display = 'none';
-        resultContainer.style.display = 'none';
-        startPage.style.display = 'block';
-        namaInputForm.value = '';
-        emailInputForm.value = '';
-        nimInputForm.value = '';
-        kelasInputForm.value = '';
-        submissionStatus.textContent = '';
-    }
-</script>
-
-</body>
-</html>
+    const submissionStatus = document.getElementById('submission-
