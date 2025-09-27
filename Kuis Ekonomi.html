@@ -91,6 +91,8 @@
             font-size: 1.2em;
             font-weight: 600;
             margin-bottom: 20px;
+            text-align: left; /* Perbaikan: Teks pertanyaan rata kiri */
+            width: 100%;
         }
         .options {
             display: flex;
@@ -133,6 +135,8 @@
         }
         #start-page, #quiz-box, #result-container {
             display: none;
+            flex-direction: column; /* Perbaikan: Konten di dalam container tampil vertikal */
+            align-items: center;
         }
         @media screen and (max-width: 600px) {
             .quiz-container {
@@ -171,17 +175,19 @@
         </div>
 
         <div id="quiz-box" style="width: 100%;">
-            <h2>Kuis Ekonomi Pra-Klasik</h2>
+            <h2 id="quiz-part-title"></h2>
             <div class="question" id="question-text"></div>
             <div class="options" id="options-container"></div>
             <div class="feedback" id="feedback-text"></div>
+            <button id="next-part-btn" class="action-button" style="display:none; margin-top:20px;">Lanjut ke Bagian Berikutnya</button>
         </div>
 
         <div id="result-container" style="width: 100%;">
-            <h3>Kuis Selesai!</h3>
-            <p>Skor Anda: <span id="score-text">0</span> / <span id="total-questions"></span></p>
+            <h3>Hasil Kuis</h3>
+            <p>Skor Anda: <span id="score-text">0</span> dari <span id="total-questions"></span></p>
+            <p>Jawaban Salah: <span id="wrong-answers-text">0</span></p>
             <p id="submission-status"></p>
-            <button id="play-again-btn" class="action-button">Main Lagi</button>
+            <button id="play-again-btn" class="action-button">Mulai Kuis Lagi</button>
         </div>
     </div>
 </div>
@@ -190,69 +196,76 @@
     const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbykczrgIvcZas5_1D3C4gXcUjSzkwW3aTf-XatoiHg5BKl7gOmpIxNY94tFXeRAwgxE2w/exec'; 
     
     let studentData = {};
-    let currentQuestionIndex = 0;
+    let currentPartIndex = 0;
+    let currentQuestionIndexInPart = 0;
     let score = 0;
+    let wrongAnswers = 0;
 
-    const questions = [
-        // Soal 1
+    const quizParts = [
         {
-            question: "Tokoh merkantilisme menekankan surplus perdagangan sebagai sumber kekayaan negara, sedangkan fisiokrat menekankan sektor pertanian. Jika kedua aliran tersebut dihadapkan pada kondisi modern Indonesia yang kaya sumber daya alam namun impor pangan masih tinggi, maka perbedaan pandangan mereka akan terlihat pada…",
-            options: ["Merkantilis mendukung impor besar-besaran, fisiokrat menekankan ekspor hasil industri.", "Merkantilis menolak ekspor hasil pertanian, fisiokrat mendukung impor pangan murah.", "Merkantilis mendorong proteksi industri dan perdagangan, fisiokrat mendorong optimalisasi sektor pertanian.", "Keduanya sama-sama menekankan liberalisasi perdagangan internasional."],
-            answer: "Merkantilis mendorong proteksi industri dan perdagangan, fisiokrat mendorong optimalisasi sektor pertanian."
+            title: "Bagian 1: Merkantilisme",
+            questions: [
+                {
+                    question: "Tokoh merkantilisme menekankan surplus perdagangan sebagai sumber kekayaan negara, sedangkan fisiokrat menekankan sektor pertanian. Jika kedua aliran tersebut dihadapkan pada kondisi modern Indonesia yang kaya sumber daya alam namun impor pangan masih tinggi, maka perbedaan pandangan mereka akan terlihat pada…",
+                    options: ["Merkantilis mendukung impor besar-besaran, fisiokrat menekankan ekspor hasil industri.", "Merkantilis menolak ekspor hasil pertanian, fisiokrat mendukung impor pangan murah.", "Merkantilis mendorong proteksi industri dan perdagangan, fisiokrat mendorong optimalisasi sektor pertanian.", "Keduanya sama-sama menekankan liberalisasi perdagangan internasional."],
+                    answer: "Merkantilis mendorong proteksi industri dan perdagangan, fisiokrat mendorong optimalisasi sektor pertanian."
+                },
+                {
+                    question: "Jika pemerintah saat ini menaikkan tarif impor beras untuk melindungi petani lokal, maka berdasarkan teori pra-klasik, kebijakan tersebut lebih sesuai dengan pemikiran…",
+                    options: ["Merkantilisme, karena mendukung surplus perdagangan lewat proteksi.", "Fisiokrat, karena mendorong pertanian menjadi sumber kekayaan sejati.", "Merkantilisme, karena fokus pada perdagangan logam mulia.", "Pemikir individual, karena menekankan rasionalitas konsumen."],
+                    answer: "Merkantilisme, karena mendukung surplus perdagangan lewat proteksi."
+                },
+                {
+                    question: "David Hume mengkritik merkantilisme karena penumpukan logam mulia berlebih dapat menimbulkan inflasi. Jika fenomena serupa terjadi ketika cadangan devisa suatu negara meningkat drastis, maka kelemahan merkantilisme yang tampak adalah…",
+                    options: ["Keseimbangan neraca pembayaran otomatis stabil.", "Logam mulia tidak selalu menjamin stabilitas harga.", "Inflasi dapat ditekan dengan memperbesar ekspor.", "Kekayaan negara hanya ditentukan oleh produktivitas pertanian."],
+                    answer: "Logam mulia tidak selalu menjamin stabilitas harga."
+                }
+            ]
         },
-        // Soal 2
         {
-            question: "Jika pemerintah saat ini menaikkan tarif impor beras untuk melindungi petani lokal, maka berdasarkan teori pra-klasik, kebijakan tersebut lebih sesuai dengan pemikiran…",
-            options: ["Merkantilisme, karena mendukung surplus perdagangan lewat proteksi.", "Fisiokrat, karena mendorong pertanian menjadi sumber kekayaan sejati.", "Merkantilisme, karena fokus pada perdagangan logam mulia.", "Pemikir individual, karena menekankan rasionalitas konsumen."],
-            answer: "Merkantilisme, karena mendukung surplus perdagangan lewat proteksi."
+            title: "Bagian 2: Fisiokrat & Etika Ekonomi",
+            questions: [
+                {
+                    question: "Thomas Aquinas menekankan “harga yang adil” sebagai prinsip ekonomi. Dalam konteks ekonomi digital saat ini, prinsip ini paling relevan jika diterapkan pada…",
+                    options: ["Penetapan harga saham di bursa efek.", "Pengawasan harga obat esensial oleh pemerintah.", "Persaingan harga tiket online oleh aplikasi travel.", "Mekanisme lelang barang antik."],
+                    answer: "Pengawasan harga obat esensial oleh pemerintah."
+                },
+                {
+                    question: "Pernyataan 'kekayaan suatu bangsa adalah totalitas hasil pertaniannya' merupakan inti dari pemikiran ekonomi aliran…",
+                    options: ["Merkantilisme", "Fisiokrat", "Skolastik", "Klasik"],
+                    answer: "Fisiokrat"
+                },
+                {
+                    question: "Quesnay menolak kebijakan proteksi Colbert karena membuat barang-barang lebih mahal. Pandangan ini menunjukkan bahwa fisiokrat…",
+                    options: ["Mendukung monopoli dagang internasional.", "Menyukai pajak ganda bagi industri mewah.", "Lebih pro pada kebebasan pasar dibanding intervensi pemerintah.", "Menolak pertanian sebagai sumber kekayaan sejati."],
+                    answer: "Lebih pro pada kebebasan pasar dibanding intervensi pemerintah."
+                },
+                {
+                    question: "Aristoteles menolak praktik riba karena dianggap tidak etis. Jika diterapkan sekarang, pandangannya paling dekat dengan…",
+                    options: ["Kebijakan subsidi pupuk bagi petani.", "Larangan bunga berlebihan pada pinjaman online.", "Regulasi harga BBM bersubsidi.", "Pajak progresif bagi pemilik tanah luas."],
+                    answer: "Larangan bunga berlebihan pada pinjaman online."
+                }
+            ]
         },
-        // Soal 3
         {
-            question: "Thomas Aquinas menekankan “harga yang adil” sebagai prinsip ekonomi. Dalam konteks ekonomi digital saat ini, prinsip ini paling relevan jika diterapkan pada…",
-            options: ["Penetapan harga saham di bursa efek.", "Pengawasan harga obat esensial oleh pemerintah.", "Persaingan harga tiket online oleh aplikasi travel.", "Mekanisme lelang barang antik."],
-            answer: "Pengawasan harga obat esensial oleh pemerintah."
-        },
-        // Soal 4
-        {
-            question: "David Hume mengkritik merkantilisme karena penumpukan logam mulia berlebih dapat menimbulkan inflasi. Jika fenomena serupa terjadi ketika cadangan devisa suatu negara meningkat drastis, maka kelemahan merkantilisme yang tampak adalah…",
-            options: ["Keseimbangan neraca pembayaran otomatis stabil.", "Logam mulia tidak selalu menjamin stabilitas harga.", "Inflasi dapat ditekan dengan memperbesar ekspor.", "Kekayaan negara hanya ditentukan oleh produktivitas pertanian."],
-            answer: "Logam mulia tidak selalu menjamin stabilitas harga."
-        },
-        // Soal 5
-        {
-            question: "Bayangkan kamu adalah penasihat ekonomi pada masa pra-klasik. Negara sedang menghadapi defisit perdagangan dan hasil pertanian rendah. Jika kamu harus menggabungkan prinsip merkantilisme dan fisiokrat, kebijakan yang paling logis adalah…",
-            options: ["Membatasi impor barang mewah, sekaligus memberikan insentif besar pada sektor pertanian.", "Meningkatkan ekspor pertanian dengan cara menurunkan tarif impor pangan.", "Mengutamakan perdagangan bebas sembari membatasi kepemilikan tanah.", "Fokus hanya pada pertanian sebagai satu-satunya sumber kekayaan negara."],
-            answer: "Membatasi impor barang mewah, sekaligus memberikan insentif besar pada sektor pertanian."
-        },
-        // Soal 6
-        {
-            question: "Plato memandang pembagian kerja penting untuk mencapai keadilan sosial. Dalam konteks industri modern, gagasan ini sejalan dengan…",
-            options: ["Spesialisasi pekerjaan dalam lini produksi pabrik.", "Kebijakan proteksi perdagangan internasional.", "Praktik monopoli perusahaan besar.", "Kebijakan pajak tunggal pada pemilik tanah."],
-            answer: "Spesialisasi pekerjaan dalam lini produksi pabrik."
-        },
-        // Soal 7
-        {
-            question: "Aristoteles menolak praktik riba karena dianggap tidak etis. Jika diterapkan sekarang, pandangannya paling dekat dengan…",
-            options: ["Kebijakan subsidi pupuk bagi petani.", "Larangan bunga berlebihan pada pinjaman online.", "Regulasi harga BBM bersubsidi.", "Pajak progresif bagi pemilik tanah luas."],
-            answer: "Larangan bunga berlebihan pada pinjaman online."
-        },
-        // Soal 8
-        {
-            question: "Quesnay menolak kebijakan proteksi Colbert karena membuat barang-barang lebih mahal. Pandangan ini menunjukkan bahwa fisiokrat…",
-            options: ["Mendukung monopoli dagang internasional.", "Menyukai pajak ganda bagi industri mewah.", "Lebih pro pada kebebasan pasar dibanding intervensi pemerintah.", "Menolak pertanian sebagai sumber kekayaan sejati."],
-            answer: "Lebih pro pada kebebasan pasar dibanding intervensi pemerintah."
-        },
-        // Soal 9
-        {
-            question: "Pemikiran pra-klasik sering dianggap belum mandiri sebagai ilmu ekonomi. Kelemahan ini tampak ketika…",
-            options: ["Pemikirannya didominasi metode kuantitatif.", "Ekonomi masih bercampur dengan politik, hukum, dan etika.", "Mereka sudah memahami teori permintaan-penawaran.", "Mereka hanya fokus pada distribusi kekayaan individu."],
-            answer: "Ekonomi masih bercampur dengan politik, hukum, dan etika."
-        },
-        // Soal 10
-        {
-            question: "Jika kamu diminta merancang sistem ekonomi hibrida berdasarkan pemikiran pra-klasik untuk negara berkembang saat ini, maka strategi yang paling tepat adalah…",
-            options: ["Meningkatkan akumulasi devisa dengan ekspor besar-besaran tanpa memperhatikan produksi pangan.", "Menghapus semua bentuk intervensi negara dalam perdagangan internasional.", "Mengombinasikan proteksi industri strategis (merkantilisme) dengan modernisasi pertanian (fisiokrat) serta etika harga adil (Aquinas).", "Menjadikan logam mulia sebagai satu-satunya ukuran keberhasilan ekonomi."],
-            answer: "Mengombinasikan proteksi industri strategis (merkantilisme) dengan modernisasi pertanian (fisiokrat) serta etika harga adil (Aquinas)."
+            title: "Bagian 3: Konsep & Analisis Terapan",
+            questions: [
+                {
+                    question: "Plato memandang pembagian kerja penting untuk mencapai keadilan sosial. Dalam konteks industri modern, gagasan ini sejalan dengan…",
+                    options: ["Spesialisasi pekerjaan dalam lini produksi pabrik.", "Kebijakan proteksi perdagangan internasional.", "Praktik monopoli perusahaan besar.", "Kebijakan pajak tunggal pada pemilik tanah."],
+                    answer: "Spesialisasi pekerjaan dalam lini produksi pabrik."
+                },
+                {
+                    question: "Pemikiran pra-klasik sering dianggap belum mandiri sebagai ilmu ekonomi. Kelemahan ini tampak ketika…",
+                    options: ["Pemikirannya didominasi metode kuantitatif.", "Ekonomi masih bercampur dengan politik, hukum, dan etika.", "Mereka sudah memahami teori permintaan-penawaran.", "Mereka hanya fokus pada distribusi kekayaan individu."],
+                    answer: "Ekonomi masih bercampur dengan politik, hukum, dan etika."
+                },
+                {
+                    question: "Jika kamu diminta merancang sistem ekonomi hibrida berdasarkan pemikiran pra-klasik untuk negara berkembang saat ini, maka strategi yang paling tepat adalah…",
+                    options: ["Meningkatkan akumulasi devisa dengan ekspor besar-besaran tanpa memperhatikan produksi pangan.", "Menghapus semua bentuk intervensi negara dalam perdagangan internasional.", "Mengombinasikan proteksi industri strategis (merkantilisme) dengan modernisasi pertanian (fisiokrat) serta etika harga adil (Aquinas).", "Menjadikan logam mulia sebagai satu-satunya ukuran keberhasilan ekonomi."],
+                    answer: "Mengombinasikan proteksi industri strategis (merkantilisme) dengan modernisasi pertanian (fisiokrat) serta etika harga adil (Aquinas)."
+                }
+            ]
         }
     ];
 
@@ -264,13 +277,16 @@
     const feedbackText = document.getElementById('feedback-text');
     const scoreText = document.getElementById('score-text');
     const totalQuestionsText = document.getElementById('total-questions');
+    const wrongAnswersText = document.getElementById('wrong-answers-text');
     const playAgainBtn = document.getElementById('play-again-btn');
     const startQuizBtn = document.getElementById('start-quiz-btn');
+    const nextPartBtn = document.getElementById('next-part-btn');
     const namaInputForm = document.getElementById('nama-input-form');
     const emailInputForm = document.getElementById('email-input-form');
     const nimInputForm = document.getElementById('nim-input-form');
     const kelasInputForm = document.getElementById('kelas-input-form');
     const submissionStatus = document.getElementById('submission-status');
+    const quizPartTitle = document.getElementById('quiz-part-title');
 
     startQuizBtn.addEventListener('click', () => {
         const nama = namaInputForm.value.trim();
@@ -296,22 +312,30 @@
         showQuestion();
     });
 
+    nextPartBtn.addEventListener('click', () => {
+        currentPartIndex++;
+        currentQuestionIndexInPart = 0;
+        nextPartBtn.style.display = 'none';
+        quizBox.style.display = 'flex';
+        showQuestion();
+    });
+
     function showQuestion() {
-        if (currentQuestionIndex < questions.length) {
-            const currentQuestion = questions[currentQuestionIndex];
-            questionText.textContent = `Soal ${currentQuestionIndex + 1} dari ${questions.length}: ${currentQuestion.question}`;
-            optionsContainer.innerHTML = '';
-            feedbackText.textContent = '';
-            currentQuestion.options.forEach(option => {
-                const button = document.createElement('button');
-                button.textContent = option;
-                button.classList.add('option-button');
-                button.addEventListener('click', () => checkAnswer(option, currentQuestion.answer));
-                optionsContainer.appendChild(button);
-            });
-        } else {
-            showResult();
-        }
+        const currentPart = quizParts[currentPartIndex];
+        const currentQuestion = currentPart.questions[currentQuestionIndexInPart];
+
+        quizPartTitle.textContent = currentPart.title;
+        questionText.textContent = `Soal ${currentQuestionIndexInPart + 1} dari ${currentPart.questions.length}: ${currentQuestion.question}`;
+        optionsContainer.innerHTML = '';
+        feedbackText.textContent = '';
+
+        currentQuestion.options.forEach(option => {
+            const button = document.createElement('button');
+            button.textContent = option;
+            button.classList.add('option-button');
+            button.addEventListener('click', () => checkAnswer(option, currentQuestion.answer));
+            optionsContainer.appendChild(button);
+        });
     }
 
     function checkAnswer(selectedOption, correctAnswer) {
@@ -324,11 +348,24 @@
             feedbackText.textContent = `Jawaban Salah. Yang benar adalah "${correctAnswer}".`;
             feedbackText.classList.remove('correct');
             feedbackText.classList.add('incorrect');
+            wrongAnswers++;
         }
         disableButtons();
+        
         setTimeout(() => {
-            currentQuestionIndex++;
-            showQuestion();
+            currentQuestionIndexInPart++;
+            const currentPart = quizParts[currentPartIndex];
+            
+            if (currentQuestionIndexInPart >= currentPart.questions.length) {
+                if (currentPartIndex < quizParts.length - 1) {
+                    quizBox.style.display = 'none';
+                    nextPartBtn.style.display = 'block';
+                } else {
+                    showResult();
+                }
+            } else {
+                showQuestion();
+            }
         }, 1500);
     }
 
@@ -341,8 +378,10 @@
     function showResult() {
         quizBox.style.display = 'none';
         resultContainer.style.display = 'flex';
+        const totalQuestions = quizParts.reduce((sum, part) => sum + part.questions.length, 0);
         scoreText.textContent = score;
-        totalQuestionsText.textContent = questions.length;
+        totalQuestionsText.textContent = totalQuestions;
+        wrongAnswersText.textContent = wrongAnswers;
         submissionStatus.textContent = 'Menyimpan data...';
         submitScore();
     }
@@ -377,8 +416,10 @@
     playAgainBtn.addEventListener('click', resetQuiz);
 
     function resetQuiz() {
-        currentQuestionIndex = 0;
+        currentPartIndex = 0;
+        currentQuestionIndexInPart = 0;
         score = 0;
+        wrongAnswers = 0;
         quizBox.style.display = 'none';
         resultContainer.style.display = 'none';
         startPage.style.display = 'block';
